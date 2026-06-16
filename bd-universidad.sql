@@ -65,15 +65,22 @@ VALUES(
 2027
 );
 
+--NOTAS: no permite agregar una nota de una inscripción
+-- que no exista :D
+
 INSERT INTO notas(
     id_inscripcion,
     nota,
     fecha
 )VALUES(
-    1,
-    9,
+    5,
+    9.00 ,
     '2026-06-16'
 );
+
+DESCRIBE notas;
+
+SHOW CREATE TABLE notas;
 
 --* PROBLEMA: sin querer presioné dos veces la misma fila de inscripción
 -- que estaba agregando, y se guardaron dos veces la misma.
@@ -99,4 +106,45 @@ ADD CONSTRAINT unica_inscripcion -- Le ponemos un NOMBRE a la regla que estamos 
 UNIQUE(id_alumno, id_materia, anio_cursada);
 
 
+-- Intentamos romper la bd
 SELECT * FROM inscripciones;
+
+SELECT * FROM profesores;
+
+SELECT * FROM materias;
+
+SELECT * FROM alumnos;
+
+SELECT * FROM notas;
+
+-- PRUEBA INTEGRIDAD : intengar agregar una materia, con una profesora
+-- que no existe.
+-- Insertamos tres materias al mismo tiempo, pero el id:2 de profesora no existe
+-- deberia saltar un mensaje de que no se puede agregar la materia matematica
+INSERT INTO materias(id_profesor,nombre)
+VALUES
+(1,'Base de Datos'),
+(1,'Programacion'),
+(2,'Matematica');
+
+-- si, nos da error justamente porque no existe el id 2, ahora intento
+--agregar sin el id 2
+
+INSERT INTO materias(id_profesor,nombre)
+VALUES
+(1,'Programacion'),
+(1,'Matematica');
+
+
+--PRUEBA
+-- Intentamos romper la FK
+-- Debería pasar que al intentar agregar na materia con profesor 99
+--(que no existe), deberia saltar un cartel que diga no existe el prof 99
+
+INSERT INTO materias(id_profesor, nombre)
+VALUES
+( 99 , 'Juana perez');
+
+-- Éxito ! no se puede agregar el prof. con id 99 porque no existe.
+
+
